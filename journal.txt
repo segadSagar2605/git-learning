@@ -1,1 +1,2 @@
 "Current status: Learning Git" 
+"Update: I understand commit now." 
