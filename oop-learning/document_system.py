@@ -23,28 +23,43 @@ conf_doc.update_status() #This should print a message that the document cannot b
 
 ##Print a html report of the documents
 #open a file to write the report
-my_docs = [doc1, doc2, conf_doc]  
-with open("report.html", "w") as f:
-    f.write("<html><body>")
-    f.write("<h1>OpenText Document Report</h1>")
-    f.write("<table border='1'>")
-    f.write("<tr><th>Title</th><th>Author</th><th>Status</th><th>Version</th><th>Confidentiality Level</th></tr>")
-    
-    # LOOP through your objects and write HTML rows
-    for doc in my_docs:
-        # Determine color based on status
-        color = "green" if doc.status == "Published" else "red"
-        confidentiality_level = getattr(doc, 'confidentiality_level', 'N/A')
-        
-        f.write(f"<tr>")
-        f.write(f"<td>{doc.title}</td>")
-        f.write(f"<td>{doc.author}</td>")
-        f.write(f"<td style='color:{color}'>{doc.status}</td>")
-        f.write(f"<td>{doc.version:.1f}</td>")
-        f.write(f"<td>{confidentiality_level}</td>")
-        f.write(f"</tr>")
-        
-    f.write("</table>")
-    f.write("</body></html>")
+my_docs = [doc1, doc2, conf_doc]
 
-print("✅ Report generated: report.html")
+# Calculate stats
+published_count = sum(1 for doc in my_docs if doc.status == "Published")
+draft_count = sum(1 for doc in my_docs if doc.status == "Draft")
+total_count = len(my_docs)
+confidential_count = sum(1 for doc in my_docs if hasattr(doc, 'confidentiality_level') and doc.confidentiality_level != 'N/A')
+
+print("\n--- Generating Web Report ---")
+my_docs = [doc1, doc2, conf_doc]
+
+with open("report.html", "w") as f:
+    f.write("<html>\n")
+    
+    # NEW: Add a head section to link the CSS
+    f.write("<head>\n")
+    f.write("  <link rel='stylesheet' href='style.css'>\n")
+    f.write("</head>\n")
+    
+    f.write("<body>\n")
+    f.write("<h1>OpenText Document Report</h1>\n")
+    # We removed the ugly border='1' because CSS handles it now
+    f.write("<table>\n") 
+    f.write("<tr><th>Title</th><th>Author</th><th>Status</th><th>Version</th></tr>\n")
+    
+    for doc in my_docs:
+        # We can still use inline styles for dynamic data like status colors!
+        color = "green" if doc.status == "Published" else "red"
+        
+        f.write("<tr>\n")
+        f.write(f"<td>{doc.title}</td>\n")
+        f.write(f"<td>{doc.author}</td>\n")
+        f.write(f"<td style='color:{color}; font-weight:bold;'>{doc.status}</td>\n")
+        f.write(f"<td>v{doc.version:.1f}</td>\n")
+        f.write("</tr>\n")
+        
+    f.write("</table>\n")
+    f.write("</body>\n</html>")
+
+print("✅ Modern report generated: report.html")

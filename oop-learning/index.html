@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>OpenText New Document</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <h1>OpenText New Document</h1>
+    <form action="/save_doc" method="post">
+
+      <label>Document Title:</label><br>
+      <input type="text" name="doc_title" placeholder="e.g., Q2 Financials" required><br><br>
+
+      <label>Document Type:</label><br>
+      <select name="doc_type">
+        <option value="Spreadsheet">Spreadsheet</option>
+        <option value="PDF">PDF</option>
+        <option value="Word">Word Document</option>
+      </select>
+      <br><br>
+
+      <button type="submit">Save Document</button>
+    </form>
+     
+    <script>
+      document.querySelector('form').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent form from submitting normally in alert show the success message and variables collected from the form
+        alert('Document saved successfully! Title: ' + this.doc_title.value + ', Type: ' + this.doc_type.value);
+        //alert('Document saved successfully!');
+        // Here you would typically send the form data to the server using AJAX
+      });
+    </script>
+
+
+  </body>
+</html>

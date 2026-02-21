@@ -1,0 +1,35 @@
+/* 1. Style the whole page (The Body) */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f7f6;
+    color: #333333;
+    margin: 40px; /* Pushes everything away from the edges of the screen */
+}
+
+/* 2. Style the Main Title */
+h1 {
+    color: #005A9E; /* A nice corporate OpenText blue */
+    border-bottom: 2px solid #cccccc;
+    padding-bottom: 10px;
+}
+
+/* 3. Style the Table Box */
+table {
+    width: 100%;
+    background-color: white;
+    border-collapse: collapse; /* Merges double borders into single clean lines */
+    box-shadow: 0px 4px 8px rgba(0,0,0,0.1); /* Adds a modern drop shadow */
+}
+
+/* 4. Style the Table Headers and Cells */
+th, td {
+    padding: 12px 15px; /* Adds breathing room inside the cells */
+    text-align: left;
+    border-bottom: 1px solid #dddddd;
+}
+
+/* 5. Style just the Header Row */
+th {
+    background-color: #005A9E;
+    color: white;
+}
