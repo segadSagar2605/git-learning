@@ -1,107 +1,107 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>OpenText New Document</title>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SimpleText Document Hub</title>
     <link rel="stylesheet" href="style.css">
-  </head>
-  <body>
-    <h1>OpenText New Document</h1>
-    <!-- <form action="/save_doc" method="post"> -->
+</head>
+<body>
 
-      <label>Document Title:</label><br>
-      <input type="text" id="doc_title" name="doc_title" placeholder="e.g., Q2 Financials" required><br><br>
+    <header class="top-bar">
+        <div class="brand">SimpleText</div>
+        <nav class="nav-links">
+            </nav>
+    </header>
 
-      <label>Document Type:</label><br>
-      <select id="doc_type" name="doc_type">
-        <option value="Spreadsheet">Spreadsheet</option>
-        <option value="PDF">PDF</option>
-        <option value="Word">Word Document</option>
-      </select>
-      <br><br>
+    <div class="dashboard-container">
+        
+        <section class="sidebar">
+            <h3>Add New Document</h3>
+            <label for="doc_title">Title:</label>
+            <input type="text" id="doc_title" placeholder="Enter title...">
 
-      <label>Content Summary (AI-ready):</label><br>
-      <textarea id="doc_content_summary" placeholder="Enter a brief summary..." style="width: 100%; height: 60px;"></textarea>
-      <br><br>
+            <label for="doc_type">Type:</label>
+            <select id="doc_type">
+                <option value="Spreadsheet">Spreadsheet</option>
+                <option value="PDF">PDF</option>
+                <option value="Word">Word Document</option>
+            </select>
 
-      <!-- <button type="submit">Save Document</button> -->
-      <button type="button" onclick="saveDocument()">Save Document</button>
-      <p id="statusMsg" style="color: blue; font-weight: bold;"></p>
+            <label for="doc_content_summary">Content Summary:</label>
+            <textarea id="doc_content_summary" placeholder="Twitter-style summary..."></textarea>
 
-      <!-- Horizontal line to separate the form from the dashboard to show the saved documents -->
-      <hr>
-      <h2>Document Dashboard </h2>
-      <button type="button" onclick="loadDocuments()">View All Documents </button>
-      <ul id="docList" style="margin-top: 20px;">
-      </ul>
+            <button type="button" onclick="saveDocument()">Save to SimpleText</button>
+            <p id="statusMsg"></p>
+        </section>
 
+        <main class="main-content">
+            <h3>Document Dashboard</h3>
+            <table id="docTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>Type</th>
+                        <th>Created By</th>
+                        <th>Summary</th>
+                    </tr>
+                </thead>
+                <tbody id="docTableBody">
+                    </tbody>
+            </table>
+        </main>
+    </div>
 
-         
-<script>
-console.log("JS LOADED SUCCESSFULLY");
+    <script>
+        async function saveDocument() {
+            const title = document.getElementById('doc_title').value;
+            const type = document.getElementById('doc_type').value;
+            const summary = document.getElementById('doc_content_summary').value;
 
+            try {
+                const response = await fetch('http://127.0.0.1:8000/save_doc', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title, doc_type: type, content_summary: summary })
+                });
+                
+                const result = await response.json();
+                document.getElementById('statusMsg').innerText = result.message;
 
+                // Clear form and refresh table
+                document.getElementById('doc_title').value = '';
+                document.getElementById('doc_content_summary').value = '';
+                loadDocuments();
+            } catch (error) {
+                console.error("Error saving:", error);
+            }
+        }
 
-async function saveDocument() {
-    console.log("1. Function started");
+        async function loadDocuments() {
+            try {
+                const response = await fetch('http://127.0.0.1:8000/get-all-docs');
+                const data = await response.json();
+                const tableBody = document.getElementById('docTableBody');
+                tableBody.innerHTML = ''; 
 
-    try {
-        const title = document.getElementById('doc_title').value;
-        const type = document.getElementById('doc_type').value;
-        const summary = document.getElementById('doc_content_summary').value;
+                data.Documents.forEach(doc => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${doc.id}</td>
+                        <td>${doc.title}</td>
+                        <td>${doc.doc_type}</td>
+                        <td>${doc.created_by}</td>
+                        <td>${doc.content_summary}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error("Error loading:", error);
+            }
+        }
 
-        console.log("2. Data collected:", { title, type, summary });
-
-        const response = await fetch('http://127.0.0.1:8000/save_doc', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                title: title,
-                doc_type: type,
-                content_summary: summary
-            })
-        });
-
-        console.log("3. Fetch sent, status:", response.status);
-
-        const result = await response.json();
-        console.log("4. Server response:", result);
-
-        document.getElementById('statusMsg').innerText = result.message;
-        //alert(result.message);
-
-        document.getElementById('doc_title').value = '';
-        document.getElementById('doc_type').value = 'Spreadsheet';
-        document.getElementById('doc_content_summary').value = '';
-
-        //loadDocuments();
-
-    } catch (error) {
-        console.error("CRITICAL ERROR:", error);
-        alert("JS Error: " + error.message);
-    }
-}
-
-async function loadDocuments() {
-    console.log("Loading documents...");
-    try {
-        const response = await fetch('http://127.0.0.1:8000/get-all-docs');
-        const data = await response.json();
-
-        const listElement = document.getElementById('docList');
-        listElement.innerHTML = '';
-
-        data.Documents.forEach(doc => {
-            const listItem = document.createElement('li');
-            listItem.textContent = `Title: ${doc.title}, Type: ${doc.doc_type}, Created by: ${doc.created_by}, Summary: ${doc.content_summary}, Created at: ${new Date(doc.created_at).toLocaleString()} `;
-            listElement.appendChild(listItem);
-        });
-    } catch (error) {
-        console.error("Load Error:", error);
-        alert("Load Error: " + error.message);
-    }
-}
-</script>
-
-
-  </body>
+        window.onload = loadDocuments;
+    </script>
+</body>
 </html>

@@ -1,35 +1,81 @@
-/* 1. Style the whole page (The Body) */
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f4f7f6;
-    color: #333333;
-    margin: 40px; /* Pushes everything away from the edges of the screen */
+/* 1. Global Reset to eliminate gaps from URL bar */
+body { 
+    font-family: 'Segoe UI', Tahoma, sans-serif; 
+    margin: 0; 
+    padding: 0; 
+    background-color: #f4f7f6; 
 }
 
-/* 2. Style the Main Title */
-h1 {
-    color: #005A9E; /* A nice corporate OpenText blue */
-    border-bottom: 2px solid #cccccc;
-    padding-bottom: 10px;
-}
-
-/* 3. Style the Table Box */
-table {
-    width: 100%;
+/* 2. The Header Section (Branding area) */
+.top-bar {
     background-color: white;
-    border-collapse: collapse; /* Merges double borders into single clean lines */
-    box-shadow: 0px 4px 8px rgba(0,0,0,0.1); /* Adds a modern drop shadow */
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ddd; /* The separator line */
 }
 
-/* 4. Style the Table Headers and Cells */
-th, td {
-    padding: 12px 15px; /* Adds breathing room inside the cells */
-    text-align: left;
-    border-bottom: 1px solid #dddddd;
+.brand {
+    font-size: 28px;
+    font-weight: bold;
+    color: #333;
+    margin: 0; /* Ensures brand name sits at the top */
 }
 
-/* 5. Style just the Header Row */
-th {
-    background-color: #005A9E;
-    color: white;
+/* 3. The Dashboard Layout (Side-by-Side) */
+.dashboard-container {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    align-items: flex-start;
 }
+
+/* Sidebar (30% split) */
+.sidebar {
+    flex: 1;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Main Content (70% split) */
+.main-content {
+    flex: 3;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* 4. Visual Elements */
+h3 { margin-top: 0; color: #333; }
+
+table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+th { background-color: #2e7d32; color: white; }
+
+input, select, textarea { 
+    width: 100%; 
+    padding: 8px; 
+    margin: 5px 0 15px 0; 
+    border: 1px solid #ccc; 
+    border-radius: 4px; 
+    box-sizing: border-box; 
+}
+
+button { 
+    width: 100%; 
+    background-color: #2e7d32; 
+    color: white; 
+    border: none; 
+    padding: 10px; 
+    cursor: pointer; 
+    border-radius: 4px; 
+    font-weight: bold; 
+}
+
+button:hover { background-color: #1b5e20; }
+
+#statusMsg { color: #2e7d32; font-weight: bold; }
